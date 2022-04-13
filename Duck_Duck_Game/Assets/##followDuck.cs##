@@ -1,0 +1,23 @@
+:q:qUSING System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class followDuck : MonoBehaviour
+{
+    public Transform duck;s
+    public Transform parent;
+    private Transform finger;
+    // Start is called before the first frame update
+    void Start()
+    {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        Vector3 direction = duck.position - parent.position;
+        float angleFingerDirection = Vector3.Angle( direction, finger.up );
+        Debug.Log( angleFingerDirection );
+        finger.Rotate( 0.0f, 0.0f, angleFingerDirection, Space.World);
+    }
+}
