@@ -18,7 +18,7 @@ public class honkBar : MonoBehaviour
             slider.value = currentValue;
         }
     }
-    public honking honkingScript;
+    public duckBehaviour honkingScript;
     void Start()
     {
         CurrentValue = 0f;

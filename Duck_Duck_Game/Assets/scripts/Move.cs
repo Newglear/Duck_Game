@@ -14,6 +14,7 @@ public class Move : MonoBehaviour
     public Transform groundCheck;
     public float groundDistance = 0.2f;
     public float flyEnergy=100f;
+    public bool isRolling;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,10 +39,18 @@ public class Move : MonoBehaviour
             speed = 25;
         }
         horizontal = Input.GetAxisRaw("Horizontal"); // -1 is left
-        if(horizontal==1)
-            render.flipX=true;
-        else
-            render.flipX =false;
+        if(Input.GetKeyDown(KeyCode.R)){
+            isRolling = true;
+        }else{
+            isRolling = false;
+        }
+        if(render){
+            if(horizontal==1)
+                render.flipX=true;
+            else
+                render.flipX =false;
+        }
+
         rb.velocity =new Vector2(horizontal*speed,rb.velocity.y);
         
     }

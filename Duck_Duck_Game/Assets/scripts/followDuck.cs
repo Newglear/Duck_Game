@@ -12,11 +12,13 @@ public class followDuck : MonoBehaviour
     private Transform finger;
     private SpriteRenderer sprite;
     public float VisionRange;
+    private bool inVision;
     // Start is called before the first frame update
     void Start()
     {
         finger = GetComponent<Transform>();
         sprite = GetComponent<SpriteRenderer>();
+        inVision = false;
     }
 
     // Update is called once per frame
@@ -35,6 +37,7 @@ public class followDuck : MonoBehaviour
                 sprite.enabled = true;
                 finger.right = -direction.normalized;
                 guy.sprite = guyWithoutArm;
+                inVision = true;
             }
         }
         else
@@ -45,7 +48,13 @@ public class followDuck : MonoBehaviour
 
     private void hideFinger()
     {
+        inVision = false;
         sprite.enabled = false;
         guy.sprite = guyWithArms;
+    }
+
+    public bool seePlayer()
+    {
+        return inVision;
     }
 }
