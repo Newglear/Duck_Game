@@ -15,6 +15,9 @@ public class Move : MonoBehaviour
     public float groundDistance = 0.2f;
     public float flyEnergy=100f;
     public bool isRolling;
+    private bool isWalking = false;
+    public Animator Anim; 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,7 +53,7 @@ public class Move : MonoBehaviour
             else
                 render.flipX =false;
         }
-
+        Anim.isWalking = (horizontal != 0);
         rb.velocity =new Vector2(horizontal*speed,rb.velocity.y);
         
     }
