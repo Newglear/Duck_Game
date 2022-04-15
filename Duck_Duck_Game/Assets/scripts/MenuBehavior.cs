@@ -37,6 +37,8 @@ public class MenuBehavior : MonoBehaviour
         main.enabled =false; 
         controls.enabled=false; 
         rules.enabled =false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     void Update(){
         if(title.enabled){

@@ -27978,7 +27978,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1614193671}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 22.5, y: 41.5, z: 0}
+  m_LocalPosition: {x: -31.8, y: 41.5, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_Children:
   - {fileID: 1919932592}
@@ -39106,7 +39106,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: EMOTIONAL DAMAGE
+  m_text: 'EMOTIONAL DAMAGE
+
+
+
+    Press R to respawn'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 40817dd634946ce4f9e58ccc813b6dc8, type: 2}
   m_sharedMaterial: {fileID: 6310463113177707993, guid: 40817dd634946ce4f9e58ccc813b6dc8, type: 2}
