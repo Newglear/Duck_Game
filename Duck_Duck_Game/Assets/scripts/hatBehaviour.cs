@@ -5,11 +5,13 @@ using UnityEngine;
 public class hatBehaviour : MonoBehaviour
 {
 //     private SpriteRenderer m_Renderer;
-    public GameObject Hat;
+    private Collider2D col;
+    private SpriteRenderer hatSprite;
     // Start is called before the first frame update
     void Start()
     {
-//         m_Renderer = GetComponent<SpriteRenderer>();
+        hatSprite = GetComponent<SpriteRenderer>();
+        col = GetComponent<Collider2D>();
     }
 
     // Update is called once per frame
@@ -22,8 +24,12 @@ public class hatBehaviour : MonoBehaviour
     {
         if ( collision.gameObject.tag == "Player" )
         {
-//             m_Renderer.enabled = false;
-            Destroy( Hat );
+            hatSprite.enabled = false;
+            col.enabled = false;
         }
+    }
+    public void Init (){
+        hatSprite.enabled = true;
+        col.enabled = true;
     }
 }

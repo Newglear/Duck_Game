@@ -9,6 +9,7 @@ public class gameManagement : MonoBehaviour
     public Transform spawner;
     public extractionScript extract; 
     public GameObject ducky;
+    public hatBehaviour hat;
     void Start()
     {
         
@@ -19,7 +20,7 @@ public class gameManagement : MonoBehaviour
         if(duck.getDead()){
             if(Input.GetButtonDown("Retry")&& duck.getEnd()){   
                 duck.Init();
-
+                hat.Init();
             }
         }
     }
