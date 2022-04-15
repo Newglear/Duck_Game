@@ -7,6 +7,7 @@ public class hatBehaviour : MonoBehaviour
 //     private SpriteRenderer m_Renderer;
     private Collider2D col;
     private SpriteRenderer hatSprite;
+    public ParticleSystem shine;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,10 +27,13 @@ public class hatBehaviour : MonoBehaviour
         {
             hatSprite.enabled = false;
             col.enabled = false;
+            shine.Pause();
+            shine.Clear();
         }
     }
     public void Init (){
         hatSprite.enabled = true;
         col.enabled = true;
+        shine.Play();
     }
 }
