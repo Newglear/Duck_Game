@@ -37,6 +37,7 @@ public class followDuck : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast( transform.position, direction, VisionRange );
         if ( hit.collider != null )
         {
+//             Debug.Log( hit.collider.tag );
             if ( hit.collider.tag != "Player" )
             {
                 hideFinger();

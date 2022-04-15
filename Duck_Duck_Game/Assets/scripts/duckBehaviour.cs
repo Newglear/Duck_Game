@@ -10,6 +10,7 @@ public class duckBehaviour : MonoBehaviour
     public ParticleSystem deathParticles;
 
     public followDuck finger;
+    public deathCounter deaths;
 
     public Rigidbody2D rb;
 
@@ -17,16 +18,19 @@ public class duckBehaviour : MonoBehaviour
 
     public Transform groundCheck;
     private Transform duckTransform;
+    public Transform spawner;
 
     public Sprite duckWithHat;
 
-    public LayerMask mask;
-
     public Canvas hud,end;
+
+    public Animator Anim;
 
     private float deathTime =0f; 
 
-    public float speed = 50f; 
+    private float speed;
+    public float normalSpeed;
+    public float maxSpeed = 40f;
     public float jumpHeight,jump;
     private float horizontal;
     public float groundDistance = 0.2f;
@@ -34,19 +38,18 @@ public class duckBehaviour : MonoBehaviour
     private float lastHonkTime;
     public float HonkInterval;
     public float fallingSpeed;
+    public float dashDistance = 10f;
+    public float crouchSpeed= 15;
 
     private bool isGrounded=true; 
     private bool dead = false;
+    private bool dashOnCooldown;
+    private float timeDash; 
+    private bool hasHat = false;
     // Start is called before the first frame update
     void Start()
     {
-        lastHonkTime = Time.time;
-        HonkSource = GetComponent<AudioSource>();
-        HonkSource.Play();
-        rb = GetComponent<Rigidbody2D>();
-        m_Renderer =GetComponent<SpriteRenderer>();
-        duckTransform = GetComponent<Transform>();
-        end.enabled=false;
+        Init();
     }
 
     // Update is called once per frame
@@ -66,6 +69,8 @@ public class duckBehaviour : MonoBehaviour
         if ( collision.gameObject.tag == "Hat" )
         {
             m_Renderer.sprite = duckWithHat;
+            hasHat = true;
+            Anim.SetBool("hasHat",true);
         }
     }
 
@@ -76,6 +81,7 @@ public class duckBehaviour : MonoBehaviour
 
     public void die()
     {
+        deaths.incrementDeaths();
         deathTime=Time.time;
         deathParticles.Play();
         dead = true;
@@ -96,9 +102,6 @@ public class duckBehaviour : MonoBehaviour
                     isGrounded = true;
                     break;
                 }
-                else{
-                    isGrounded =false;
-                }
             }
         }
     }
@@ -109,18 +112,22 @@ public class duckBehaviour : MonoBehaviour
         {
             //Debug.Log(isGrounded);
             if(Input.GetButton("Jump") && isGrounded ){
-    //             Debug.Log("Jump Called");
+                //Debug.Log("Jump Called");
                 //rb.AddForce(new Vector2(0,jumpHeight));
                 rb.velocity = Vector2.up*jumpHeight;  
                 isGrounded = false;
-            } 
-            if(Input.GetKey(KeyCode.LeftControl)){
-                speed = 10 ; 
             }
-            else{
-                speed = 25;
-            }
+            if(Input.GetKey(KeyCode.LeftControl)) 
+                Crouch();
+            else if(Input.GetKey(KeyCode.LeftShift))    
+                Accelerate();
+            if(!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.LeftControl))
+                Decelerate();
+                
+            if(Input.GetButton("Dash")&& horizontal !=0)
+                duckduckDash();
             horizontal = Input.GetAxisRaw("Horizontal"); // -1 is left
+            Animate();
             if(horizontal==1)
                 m_Renderer.flipX=true;
             else if ( horizontal == -1 )
@@ -159,4 +166,94 @@ public class duckBehaviour : MonoBehaviour
         }
     }
 
+    private void duckduckDash(){
+        
+        if(!dashOnCooldown)
+        {
+            for(int i=0; i<5;i++){
+                StartCoroutine(dash());
+            }
+            
+            dashOnCooldown = true;
+            timeDash = Time.time;
+        }
+        else{
+            dashOnCooldown = ((Time.time - timeDash ) < 1f);
+        }
+            
+    }
+    IEnumerator dash(){
+        rb.AddForce(new Vector2(horizontal * dashDistance/5 , 0f));
+        yield return new WaitForSeconds(0.6f);
+    }
+    private void Accelerate(){
+        float deltaSpeed = maxSpeed /25f;
+//         Debug.Log(deltaSpeed);
+        if(speed < maxSpeed)
+        {
+//             Debug.Log("Increasing");
+            speed += deltaSpeed;
+//             Debug.Log(speed);
+        }
+            
+        else{
+//             Debug.Log("MAX");
+            speed = maxSpeed;
+        }
+            
+    }
+    private void Decelerate(){
+        float deltaSpeed = maxSpeed /25f;
+//         Debug.Log(deltaSpeed);
+        if(speed > normalSpeed)
+        {
+//             Debug.Log("Decreasing");
+            speed -= deltaSpeed;
+//             Debug.Log(speed);
+        }
+            
+        else{
+//             Debug.Log("MIN");
+            speed = normalSpeed;
+        }
+            
+    }
+    
+    private void Crouch(){
+        speed = crouchSpeed;
+    }
+    private void Animate(){
+        Anim.SetBool("isWalking",horizontal != 0f);
+        Anim.SetBool("isRunning",Input.GetKey(KeyCode.LeftShift));
+        Anim.SetBool("Jump",!isGrounded);
+        Anim.SetBool("Crouch",Input.GetKey(KeyCode.LeftControl));
+    }
+
+    public bool canWin()
+    {
+        return hasHat;
+    }
+    public bool getDead(){
+        return dead;
+    }
+    public bool getEnd(){
+        return end.enabled;
+    }
+    public void Init(){
+        lastHonkTime = Time.time;
+        HonkSource = GetComponent<AudioSource>();
+        HonkSource.Play();
+        rb = GetComponent<Rigidbody2D>();
+        m_Renderer =GetComponent<SpriteRenderer>();
+        duckTransform = GetComponent<Transform>();
+        end.enabled=false;
+        hud.enabled =true;
+        dashOnCooldown = false;
+        Anim.SetBool( "hasHat", false );
+        duckTransform.position =  spawner.position;
+        dead =false;
+        deathParticles.Pause();
+        deathParticles.Clear();
+
+    }
 }
